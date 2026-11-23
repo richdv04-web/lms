@@ -359,15 +359,15 @@ footer .cap{color:var(--mute);letter-spacing:.24em}
   /* ===== 서버 연결 =====
      1) 이 파일을 Apps Script 'Index' 로 넣으면 google.script.run 으로 자동 연결 (ENDPOINT 불필요)
      2) 다른 곳에 올릴 땐 아래에 Apps Script 웹앱 주소(…/exec)를 넣으세요 */
-  var ENDPOINT='https://script.google.com/macros/s/AKfycbzB4bBZ6_SGSiPr942sxvdUJr-ZirTOEiJD_EbwoQqA5yfjy7pn8RoQHbR7q6y200Oc/exec';
+  var KEY='2026-12';var ENDPOINT='https://script.google.com/macros/s/AKfycbzB4bBZ6_SGSiPr942sxvdUJr-ZirTOEiJD_EbwoQqA5yfjy7pn8RoQHbR7q6y200Oc/exec';
   var GAS=!!(window.google&&google.script&&google.script.run);
   var BRANCH={'TREASURE':'김철현 지점장 - 1지점 TREASURE','HEXAGON':'유상연 지점장 - 2지점 HEXAGON','A-ONE':'김성종 지점장 - 3지점 A-ONE'};
   /* 기본 명단(서버 명단이 있으면 그것으로 교체) */
   var ROSTER={},CLOSED='';
-  function callApi(fn,arg){return new Promise(function(res,rej){
+  function callApi(fn,arg){if(KEY){if(fn==='getPublicEvent')arg=KEY;else{arg=arg||{};arg.key=KEY;}}return new Promise(function(res,rej){
     if(GAS){google.script.run.withSuccessHandler(res).withFailureHandler(rej)[fn](arg);return;}
     if(!ENDPOINT){res(null);return;}
-    var o=fn==='getPublicEvent'?fetch(ENDPOINT+(ENDPOINT.indexOf('?')<0?'?':'&')+'api=public'):fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(arg)});
+    var o=fn==='getPublicEvent'?fetch(ENDPOINT+(ENDPOINT.indexOf('?')<0?'?':'&')+'api=public'+(KEY?'&key='+encodeURIComponent(KEY):'')):fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(arg)});
     o.then(function(r){return r.json();}).then(res,rej);});}
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
