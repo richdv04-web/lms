@@ -388,7 +388,7 @@ h1{margin:0;font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.035
   /* 제출 */
   $('go').onclick=function(){
     var m=missing();
-    if(m.length){$('msg').textContent=m.join(', ')+'을(를) 입력해 주세요.';$('msg').classList.add('on');return;}
+    if(m.length){$('msg').textContent=m.join(', ')+((function(t){var c=t.charCodeAt(t.length-1)-44032;return(c>=0&&c<11172&&c%28===0)?'를':'을';})(m[m.length-1]))+' 입력해주세요.';$('msg').classList.add('on');return;}
     submit();
   };
   async function submit(){
