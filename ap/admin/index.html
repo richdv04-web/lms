@@ -575,6 +575,10 @@ body:before,body:after{display:none}
 .offg{border-top:1px solid var(--ln);padding-top:6px}
 .smbar{position:sticky;bottom:-1px;margin:18px -4px 0;padding:14px 4px 6px;background:linear-gradient(to bottom,transparent,var(--card2) 14px)}
 @media(min-width:720px){.nl{grid-template-columns:repeat(3,1fr)}}
+
+.sw i.xsw{cursor:pointer}
+.shw{max-height:340px;overflow:auto;border-radius:14px;background:var(--card2)}
+.sht{width:100%;border-collapse:collapse;font-size:12.5px;white-space:nowrap}.sht th,.sht td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--ln)}.sht th{position:sticky;top:0;background:var(--card2);font-weight:600;color:var(--mut);font-size:12px}
 </style></head><body><header class="top"><div class="in"><span class="wm">L.A.S<i></i></span><span class="sp"></span><button class="pl" id="blink" aria-label="설문 링크"></button><button class="pl pri" id="bcp" aria-label="이미지 복사"></button><button class="pl" id="bsv" aria-label="저장"></button><span class="vs"></span><button class="ib" id="bset" aria-label="설정" style="display:none"></button><button class="ib" id="bref" aria-label="새로고침"></button><button class="ib" id="thm"></button></div></header>
 <main class="wrap" id="root"><div class="sk"></div><div class="sk" style="width:60%"></div><div class="sk" style="height:160px;border-radius:20px"></div></main>
 <div class="mo" id="wm"><div class="sh"><div class="hd2"><h3 style="margin:0">주차 선택</h3><button class="xb" id="wx" aria-label="닫기"></button></div><div class="sub">금요일 기준 주차 · 신청일 다음 주 월~일 AP</div><div class="wl" id="wl"></div></div></div>
@@ -625,16 +629,16 @@ function calc(c){
   [1,2,3].forEach(function(b,bi){
     var ros=R.filter(function(r){return r.b===b}).map(function(r){return r.n}),map={},rows=D.responses.filter(function(r){return r.cycle===c&&r.branch===b});
     rows.forEach(function(r){map[r.name]=r});
-    var pend=[],mem=[],ext=[];
-    ros.forEach(function(n){if(map[n])mem.push(map[n]);else pend.push(n)});
-    rows.forEach(function(r){if(ros.indexOf(r.name)<0)ext.push(r)});
+    var pend=[],mem=[],extAll=[],ext=[],extX=[],st=D.settings||{};
+    ros.forEach(function(n){if(map[n]){map[n].extra=false;mem.push(map[n])}else pend.push(n)});
+    rows.forEach(function(r){if(ros.indexOf(r.name)<0){r.extra=true;extAll.push(r);if(st['xstat|'+c+'|'+r.name]==='Y'){r.xs=true;extX.push(r)}else{r.xs=false;ext.push(r)}}});
     var all=mem.concat(ext),day=[0,0,0,0,0,0,0],plan=0,ppl=0,none=0,late=0;
     all.forEach(function(r){var k=r.days.filter(function(d){return DAYS.indexOf(d)>-1});k.forEach(function(d){day[DAYS.indexOf(d)]++});plan+=k.length;if(k.length)ppl++;else none++;if(r.late)late++});
     var mr=all.filter(function(r){return r.monthEnd&&r.contracts!=null}),mC=0,mM=0,mN=0;
     mr.forEach(function(r){mC+=r.contracts||0;mM+=r.mip||0;if(!r.contracts&&!r.mip)mN++});
     pend.sort(ko);
-    var mu=all.filter(function(r){return r.days.filter(function(d){return DAYS.indexOf(d)>-1}).length>1}).length;var B={mu:mu,i:bi,b:b,team:BR[b].team,mgr:BR[b].mgr,base:ros.length,resp:mem.length,respP:pc(mem.length,ros.length),pend:pend,mem:mem,ext:ext,all:all,day:day,plan:plan,ppl:ppl,none:none,late:late,avg:ros.length?plan/ros.length:0,mC:mC,mM:mM,mN:mN,mRows:mr};
-    o.mu=(o.mu||0)+mu;o.bs.push(B);o.base+=B.base;o.resp+=B.resp;o.pendN+=pend.length;o.extra+=ext.length;o.late+=late;o.plan+=plan;o.ppl+=ppl;o.none+=none;o.mC+=mC;o.mM+=mM;o.mN+=mN;
+    var mu=all.filter(function(r){return r.days.filter(function(d){return DAYS.indexOf(d)>-1}).length>1}).length;var B={mu:mu,i:bi,b:b,team:BR[b].team,mgr:BR[b].mgr,base:ros.length+ext.length,resp:mem.length+ext.length,respP:pc(mem.length+ext.length,ros.length+ext.length),pend:pend,mem:mem,ext:ext,extAll:extAll,extX:extX,all:all,day:day,plan:plan,ppl:ppl,none:none,late:late,avg:(ros.length+ext.length)?plan/(ros.length+ext.length):0,mC:mC,mM:mM,mN:mN,mRows:mr};
+    o.mu=(o.mu||0)+mu;o.bs.push(B);o.base+=B.base;o.resp+=B.resp;o.pendN+=pend.length;o.extra+=ext.length;o.extraX=(o.extraX||0)+extX.length;o.late+=late;o.plan+=plan;o.ppl+=ppl;o.none+=none;o.mC+=mC;o.mM+=mM;o.mN+=mN;
     day.forEach(function(v,i){o.day[i]+=v});o.dayB.push(day);o.mRows=o.mRows.concat(mr);
   });
   o.respP=pc(o.resp,o.base);o.avg=o.base?o.plan/o.base:0;return o}
@@ -752,7 +756,7 @@ function makeReport(k){
       if(C.me&&B.mRows.length){var rs=B.mRows.filter(function(r){return r.contracts||r.mip}).sort(function(a,z){return (z.mip||0)-(a.mip||0)}),bh4=120+rs.length*rh+20;
         if(rs.length){glass(c,T,P,y,IW,bh4,40);tx(c,nextMon(CY)+'월 예상 · 개인별',P+44,y+60,28,700,T.mut);rs.forEach(function(r,j){var ry=y+90+j*rh;c.fillStyle=T.ln;c.fillRect(P+44,ry,IW-88,1.5);tx(c,r.name,P+44,ry+rh*.66,27,600,T.fg);tx(c,won(r.mip)+'만원',W-P-44,ry+rh*.66,27,600,T.fg,'right');tx(c,r.contracts+'건',W-P-44-mw(c,won(r.mip)+'만원',27,600)-24,ry+rh*.66,26,500,T.mut,'right')});y+=bh4+20}}
     }
-    var notes=[];var ex=B?B.ext.length:C.extra;if(ex)notes.push(['명단 외 응답 '+ex+'명 · 응답률 미포함, 건수만 포함',T.ex]);
+    var notes=[];var ex=B?B.ext.length:C.extra;if(ex)notes.push(['명단 외 응답 '+ex+'명 포함 (명단·응답률에 반영)',T.ex]);var exx=B?B.extX.length:C.extraX;if(exx)notes.push(['통계 제외 '+exx+'명',T.mut]);
     var lt=B?B.late:C.late;if(lt)notes.push(['마감 후 응답 '+lt+'명 포함',T.mut]);
     y+=6;notes.forEach(function(n){tx(c,n[0],P+4,y+26,22,550,n[1]);y+=40});
     y+=40;tx(c,'L.A.S  AP CHECK',W/2,y,17,700,T.faint,'center',6);y+=P+6;return y}
@@ -981,8 +985,22 @@ function addToRoster(n,b){var rows=rosterAtJs(CY).map(function(r){return{b:r.b,n
   api('apiSaveRoster',KEY,CY,rows).then(function(){toast(n+' · '+wlabel(CY)+'부터 명단에 추가했어요');return load(true)},function(e){toast(errText(e),true)})}
 function dropFromRoster(n){var rows=rosterAtJs(CY).map(function(r){return{b:r.b,n:r.n,y:r.n===n?false:r.y}});
   api('apiSaveRoster',KEY,CY,rows).then(function(){toast(n+' · '+wlabel(CY)+'부터 응답 대상에서 제외했어요');return load(true)},function(e){toast(errText(e),true)})}
+
+function xsSec(){var C=calc(CY),ea=[];C.bs.forEach(function(B){B.extAll.forEach(function(r){ea.push(r)})});
+  var h='<div class="sm-sec"><h4>명단 외 응답 · 통계</h4><div class="d"><b>'+esc(wlabel(CY))+'</b> 주차에 명단에 없는 이름으로 들어온 응답이에요. 기본은 <b>통계에 포함</b>(분모·응답률·예정 건수)이고, 끄면 통계에서 빠져요.</div>';
+  if(!ea.length)h+='<div class="d" style="margin:0">이 주차엔 명단 외 응답이 없어요</div>';
+  else h+=ea.map(function(r,i){var on=!r.xs;return '<div class="sw" style="margin-bottom:8px"><div><b>'+esc(r.name)+'</b><span>'+esc(BR[r.branch].team)+' · '+(on?'통계 포함':'통계 제외')+'</span></div><i class="xsw'+(on?' on':'')+'" data-n="'+esc(r.name)+'" role="switch" aria-checked="'+on+'"></i></div>'}).join('');
+  return h+'</div>'}
+function xsBind(){Array.prototype.forEach.call(document.querySelectorAll('#smb .xsw'),function(t){t.onclick=function(){var n=t.getAttribute('data-n'),on=!t.classList.contains('on');
+  api('apiSetExclude',KEY,CY,n,!on).then(function(){D.settings['xstat|'+CY+'|'+n]=on?'N':'Y';t.classList.toggle('on',on);t.setAttribute('aria-checked',on);t.parentNode.querySelector('span').textContent=t.parentNode.querySelector('span').textContent.split(' · ')[0]+' · '+(on?'통계 포함':'통계 제외');toast(on?'통계에 포함했어요':'통계에서 제외했어요');render()},function(e){toast(errText(e),true)})}})}
+function kt(ts){var d=new Date(ts+9*3600000);return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+' '+p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())}
+function shSec(){var cs=cycles();
+  return '<div class="sm-sec"><h4>응답 시트</h4><div class="d">구글 시트에 쌓인 원본 응답이에요. 주차를 고르거나 이름으로 찾을 수 있어요.</div><div class="sar" style="margin-bottom:8px"><select class="fld" id="shw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · '+c.slice(5).replace('-','/')+' 금</option>'}).join('')+'</select></div><input class="fld" id="shq" placeholder="이름 검색" autocomplete="off" style="margin-bottom:8px"><div class="shw"><div id="sht"></div></div>'+(D.sheetUrl?'<a class="pl full" style="margin-top:10px;text-decoration:none" href="'+esc(D.sheetUrl)+'" target="_blank" rel="noopener">구글 시트에서 열기</a>':'')+'</div>'}
+function shBind(){function d(){var c=$('shw').value,q=$('shq').value.trim(),rs=D.responses.filter(function(r){return r.cycle===c&&(!q||r.name.indexOf(q)>-1)}).sort(function(a,z){return z.ts-a.ts}),me=isME(c);
+  $('sht').innerHTML='<table class="sht"><thead><tr><th>제출</th><th>지점</th><th>성함</th><th>예정</th>'+(me?'<th>건/MIP</th>':'')+'<th>비고</th></tr></thead><tbody>'+(rs.length?rs.map(function(r){var nt=[];if(r.extra)nt.push('명단외');if(r.late)nt.push('마감후');if(r.extra&&(D.settings||{})['xstat|'+c+'|'+r.name]==='Y')nt.push('통계제외');return '<tr><td>'+kt(r.ts)+'</td><td>'+r.branch+'</td><td>'+esc(r.name)+'</td><td>'+(r.days.length?r.days.join(''):'없음')+'</td>'+(me?'<td>'+(r.contracts==null?'-':r.contracts+'/'+r.mip)+'</td>':'')+'<td>'+nt.join(' · ')+'</td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--mut)">응답이 없어요</td></tr>')+'</tbody></table><div class="d" style="margin:8px 0 0">총 '+rs.length+'건</div>'}
+  $('shw').onchange=d;$('shq').oninput=d;d()}
 function openSettings(){
-  var h='<span class="sm-badge">'+(ROLE==='edit'?'편집 권한':'열람 권한')+'</span>';
+  var h='';
   if(ROLE==='edit'){
     var es={};D.snaps.forEach(function(s){es[s.eff]=1});es[D.cycle]=1;es[fri(D.cycle,7)]=1;es[fri(D.cycle,14)]=1;var el=Object.keys(es).sort().reverse(),have={};D.snaps.forEach(function(s){have[s.eff]=1});
     h+='<div class="sm-sec"><h4>명단 관리</h4><div class="d">이름을 직접 입력해 <b>추가·제외</b>하거나 목록에서 눌러 제외/복구해요. 선택한 <b>적용 주차부터</b> 반영되고 이전 주차는 그대로예요.</div>'+
@@ -992,7 +1010,8 @@ function openSettings(){
       '<div class="smbar"><div class="smp" id="smp"></div><button class="pl pri full" id="smsv">명단 저장</button></div></div>';
     var cur=D.cycle,sv=D.settings['monthend|'+cur],on=sv==='Y'?true:sv==='N'?false:fri(cur,7).slice(0,7)!==cur.slice(0,7);
     h+='<div class="sm-sec"><h4>월말 설문</h4><div class="sw"><div><b>'+esc(wlabel(cur))+' 월말 설문</b><span>켜면 예상 계약(건)·MIP를 함께 받아요</span></div><i id="smm" class="'+(on?'on':'')+'" role="switch" aria-checked="'+on+'"></i></div></div>'+
-      '<div class="sm-sec"><h4>키 변경</h4><div class="d"><b>열람 키</b>는 단장·지점장용, <b>편집 키</b>는 운영자용이에요. 바꾸지 않을 칸은 비워 두세요.</div><div class="sm-row" style="margin-bottom:8px"><input class="fld" id="smkv" placeholder="새 열람 키" autocomplete="off"><input class="fld" id="smke" placeholder="새 편집 키" autocomplete="off"></div><button class="pl full" id="smkb">키 변경</button></div>';
+      xsSec()+shSec()+
+      '<div class="sm-sec"><h4>접속 키</h4><div class="d">관리자 페이지에 들어올 때 쓰는 키예요. <b>비워서 저장하면 키 없이 누구나 열 수 있어요.</b> 링크가 공개돼 있으니 키를 걸어두는 걸 권장해요.</div><div class="sm-row" style="margin-bottom:8px"><input class="fld" id="smkv" placeholder="새 접속 키 (4자 이상, 공백 없이)" autocomplete="off"></div><button class="pl full" id="smkb">접속 키 저장</button></div>';
   }
   h+='<div class="sm-sec"><button class="pl full" id="smo">나가기</button><div class="d" style="margin:8px 0 0;text-align:center">이 기기에 저장된 키를 지워요</div></div>';
   $('smb').innerHTML=h;$('smo').onclick=function(){logout('')};
@@ -1002,8 +1021,9 @@ function openSettings(){
     $('smsv').onclick=function(){var pr=smParse($('smt').value);if(pr.errs.length||!pr.rows.length)return;$('smsv').disabled=true;
       api('apiSaveRoster',KEY,$('smw').value,pr.rows).then(function(r){toast(r.count+'명 저장했어요');return load(true)},function(e){toast(errText(e),true)}).then(function(){if($('sm').classList.contains('on'))openSettings()})};
     $('smm').onclick=function(){var t=$('smm'),n=!t.classList.contains('on');api('apiSetMonthEnd',KEY,D.cycle,n).then(function(){D.settings['monthend|'+D.cycle]=n?'Y':'N';t.classList.toggle('on',n);t.setAttribute('aria-checked',n);toast(n?'월말 설문을 켰어요':'월말 설문을 껐어요');load(true)},function(e){toast(errText(e),true)})};
-    $('smkb').onclick=function(){var v=$('smkv').value.trim(),e=$('smke').value.trim();if(!v&&!e){toast('바꿀 키를 입력해 주세요',true);return}
-      api('apiChangeKeys',KEY,v,e).then(function(){if(e){KEY=e;try{localStorage.setItem('apKey',e)}catch(x){}}$('smkv').value='';$('smke').value='';toast('키를 바꿨어요')},function(x){toast(errText(x),true)})}}
+    $('smkb').onclick=function(){var v=$('smkv').value.trim();if(v&&!confirm('접속 키를 바꿀까요?'))return;if(!v&&!confirm('키를 해제하면 링크를 아는 누구나 관리자 페이지를 열 수 있어요. 해제할까요?'))return;
+      api('apiSetAccessKey',KEY,v).then(function(){if(v){KEY=v;try{localStorage.setItem('apKey',v)}catch(x){}}else{KEY='-';try{localStorage.removeItem('apKey')}catch(x){}}$('smkv').value='';toast(v?'접속 키를 바꿨어요':'접속 키를 해제했어요')},function(x){toast(errText(x),true)})};
+    xsBind();shBind()}
   $('sm').classList.add('on')}
 function dot(i){return '<i class="td" style="background:var(--b'+(i%3+1)+')"></i>'}
 function render(){
@@ -1019,7 +1039,7 @@ function render(){
   [].forEach.call(document.querySelectorAll('[data-go]'),function(b){b.onclick=function(){TAB=b.dataset.go;render();window.scrollTo(0,0)}});
   [].forEach.call(document.querySelectorAll('[data-vw]'),function(b){b.onclick=function(){VW=b.dataset.vw;render()}});
   [].forEach.call(document.querySelectorAll('[data-add]'),function(b){b.onclick=function(){var p=b.dataset.add.split('|');addToRoster(p[0],+p[1])}});[].forEach.call(document.querySelectorAll('[data-drop]'),function(b){b.onclick=function(){if(b.dataset.armed){dropFromRoster(b.dataset.drop)}else{b.dataset.armed='1';b.classList.add('arm');b.textContent=b.dataset.drop+' · 제외?';setTimeout(function(){if(b.isConnected){b.dataset.armed='';b.classList.remove('arm');b.textContent=b.dataset.drop}},2600)}}});[].forEach.call(document.querySelectorAll('[data-cp]'),function(b){b.onclick=function(){copy(b.dataset.cp).then(function(){toast('미응답 명단을 복사했어요')})}});
-  $('blink').onclick=function(){if(D&&D.surveyUrl&&D.surveyUrl!=='#')copy(D.surveyUrl).then(function(){toast('설문 링크를 복사했어요')});else toast('설문 링크는 배포 후 연결돼요')};
+  $('blink').onclick=function(){if(D)copy(location.href.replace(/admin\/?(index\.html)?([?#].*)?$/,'')).then(function(){toast('설문 링크를 복사했어요')});else toast('설문 링크는 배포 후 연결돼요')};
   $('bnt').onclick=function(){repCopy('notice')};$('bns').onclick=function(){repSave('notice')};
   $('bcp').onclick=function(){repCopy(TAB==='all'?'all':+TAB)};$('bsv').onclick=function(){repSave(TAB==='all'?'all':+TAB)}}
 function openWeeks(){
@@ -1065,7 +1085,7 @@ function allView(C){
   h+='<div class="sec">지점별</div>'+branchCompare(C);
   if(C.me)h+=monthBlock(C,true);
   h+=notes(C);return h}
-function notes(x){var h='';if(ROLE==='edit'&&x.ext&&x.ext.length)h+='<div class="gl grp ex"><div class="gh"><b>명단 외 응답</b><em>'+x.ext.length+'</em></div><div class="names">'+x.ext.map(function(r){return '<button class="nmp ex adb" data-add="'+esc(r.name)+'|'+r.branch+'">+ '+esc(r.name)+'</button>'}).join('')+'</div><div class="d2">누르면 이 주차부터 명단에 넣어요</div></div>';var ex=x.extra!=null?x.extra:x.ext.length;if(ex)h+='<div class="note"><b>●</b> 명단 외 응답 '+ex+'명은 응답률에서 제외하고 예정 건수에만 포함</div>';
+function notes(x){var h='',ea=x.extAll||x.ext||[];if(ROLE==='edit'&&ea.length)h+='<div class="gl grp ex"><div class="gh"><b>명단 외 응답</b><em>'+ea.length+'</em></div><div class="names">'+ea.map(function(r){return '<button class="nmp ex adb" data-add="'+esc(r.name)+'|'+r.branch+'">+ '+esc(r.name)+(r.xs?' · 제외':'')+'</button>'}).join('')+'</div><div class="d2">누르면 이 주차부터 명단에 넣어요 · 통계 제외는 설정에서</div></div>';var ex=x.extra!=null?x.extra:x.ext.length;if(ex)h+='<div class="note"><b>●</b> 명단 외 응답 '+ex+'명을 명단·응답률에 포함했어요</div>';var xx=x.extraX!=null?x.extraX:(x.extX||[]).length;if(xx)h+='<div class="note" style="margin-top:8px"><b style="color:var(--mut)">●</b> 통계 제외 '+xx+'명 (설정에서 변경)</div>';
   var lt=x.late;if(lt)h+='<div class="note" style="margin-top:8px"><b style="color:var(--acT)">●</b> 마감 후 응답 '+lt+'명 포함 (집계 반영)</div>';return h}
 function tags(r){return (r.extra?'<em class="ex">명단외</em>':'')+(r.late?'<em class="lt">마감후</em>':'')}
 function pill(r){return '<span class="nmp'+(r.extra?' ex':'')+(r.late?' lt':'')+'">'+esc(r.name)+'</span>'}
