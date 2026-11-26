@@ -987,7 +987,7 @@ function dropFromRoster(n){var rows=rosterAtJs(CY).map(function(r){return{b:r.b,
   api('apiSaveRoster',KEY,CY,rows).then(function(){toast(n+' · '+wlabel(CY)+'부터 응답 대상에서 제외했어요');return load(true)},function(e){toast(errText(e),true)})}
 
 function xsSec(){var C=calc(CY),ea=[];C.bs.forEach(function(B){B.extAll.forEach(function(r){ea.push(r)})});
-  var h='<div class="sm-sec"><h4>명단 외 응답 · 통계</h4><div class="d"><b>'+esc(wlabel(CY))+'</b> 주차에 명단에 없는 이름으로 들어온 응답이에요. 기본은 <b>통계에 포함</b>(분모·응답률·예정 건수)이고, 끄면 통계에서 빠져요.</div>';
+  var h='<div class="sm-sec"><h4>명단 외 응답 · 통계</h4><div class="d"><b>'+esc(wlabel(CY))+'</b>에 명단에 없는 이름으로 들어온 응답이에요. 기본은 <b>통계에 포함</b>(분모·응답률·예정 건수)이고, 끄면 통계에서 빠져요.</div>';
   if(!ea.length)h+='<div class="d" style="margin:0">이 주차엔 명단 외 응답이 없어요</div>';
   else h+=ea.map(function(r,i){var on=!r.xs;return '<div class="sw" style="margin-bottom:8px"><div><b>'+esc(r.name)+'</b><span>'+esc(BR[r.branch].team)+' · '+(on?'통계 포함':'통계 제외')+'</span></div><i class="xsw'+(on?' on':'')+'" data-n="'+esc(r.name)+'" role="switch" aria-checked="'+on+'"></i></div>'}).join('');
   return h+'</div>'}
