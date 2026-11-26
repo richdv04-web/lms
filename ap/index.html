@@ -152,6 +152,34 @@ h1{margin:0;font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.035
   .mipw input::placeholder{font-size:inherit;letter-spacing:inherit}.field{padding:0 14px}
   .cb{width:40px;height:40px}
 }
+/* PC·태블릿: 폰 모양 카드 대신 넓은 카드 */
+@media(min-width:760px){
+  .shell{max-width:680px;padding:clamp(28px,6vh,72px) 24px}
+  .card{padding:52px 56px 44px;border-radius:36px}
+  .brand b,.brand i{font-size:32px}
+  .top em{font-size:17px}
+  .badge{font-size:16.5px}.badge em{font-size:14px}
+  .latenote{font-size:13.5px}
+  .stepper{margin-top:30px;padding:11px}.hl{top:11px;bottom:11px;left:11px;width:calc((100% - 22px)/var(--n,4))}
+  .ic{width:54px;height:54px}
+  .sec{margin-top:34px}.sec:first-of-type{margin-top:32px}
+  .lab{font-size:15px;margin-bottom:13px}.lab em{font-size:14px}
+  .brs{gap:12px}
+  .br{height:78px;border-radius:18px;gap:7px}.br b{font-size:17px}.br small{font-size:13.5px}
+  .field{height:74px;border-radius:18px;padding:0 24px;font-size:22px}.field::placeholder{font-size:17px}
+  .sugg button{height:46px;font-size:16.5px}
+  .hint{font-size:14.5px}
+  .days{gap:12px}
+  .dy{height:84px;border-radius:18px;gap:8px}.dy b{font-size:20px}.dy small{font-size:13px}
+  .none{height:70px;border-radius:18px;font-size:16px}
+  .go{height:74px;border-radius:18px;font-size:19px;margin-top:34px}
+  .ln{min-height:80px}.ln>span{font-size:16px}
+  .cb{width:50px;height:50px}.cv{font-size:28px}
+  .mipw{width:min(260px,50%)}.mipw input{height:56px;font-size:26px}
+  .rv div{min-height:64px;font-size:16.5px}.rv span{font-size:15px}
+  .mnote,.again{font-size:13.5px}
+  .done h2{font-size:34px}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
