@@ -47,7 +47,8 @@ h1{margin:0;font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.035
 .info-b{margin-top:10px}
 .badge{display:flex;align-items:center;gap:9px;margin:0;font-size:14.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
 .badge em{margin-left:auto;font-style:normal;font-size:12.5px;font-weight:700;color:var(--gold)}
-.badge svg{flex:none;width:20px;height:20px}
+.badge svg{flex:none;width:22px;height:22px;color:var(--gold)}
+.badge.late svg{color:inherit}
 .badge.late,.badge.late em{color:#A3B6DE}
 .side{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--tx);white-space:nowrap}
 .side.me{color:var(--gold)}
@@ -191,7 +192,7 @@ h1{margin:0;font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.035
 
   <section class="info">
     <div class="info-b">
-      <span class="badge" id="badge"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#7FB2FF" d="M12 1.8l2.4 1.7 2.9-.2 1.2 2.7 2.6 1.3-.2 2.9 1.7 2.4-1.7 2.4.2 2.9-2.6 1.3-1.2 2.7-2.9-.2L12 22.2l-2.4-1.7-2.9.2-1.2-2.7L2.9 16.7l.2-2.9L1.4 11.4l1.7-2.4-.2-2.9 2.6-1.3 1.2-2.7 2.9.2z"/><path d="M8 12.3l2.8 2.8L16 9.8" fill="none" stroke="#07122A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="badgeT">—</span><em id="dday"></em></span>
+      <span class="badge" id="badge"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.9 12.3l2.9 2.9 5.4-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="badgeT">—</span><em id="dday"></em></span>
     </div>
   </section>
   <p class="again" id="again">제출 후 재제출 시 최종 응답으로 반영됩니다.</p>
