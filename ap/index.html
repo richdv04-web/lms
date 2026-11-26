@@ -17,7 +17,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@500;600&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#7FB2FF;--gold-d:#1E3A6B;--ink:#121110;--card1:#2D2C2A;--card2:#1B1A19;--row:rgba(255,255,255,.055);--rowl:rgba(255,255,255,.07);--tx:#F4F3F1;--mut:#9C9A95;--dim:#6B6965;--fb:'DM Sans','SUIT Variable',SUIT,'Noto Sans KR',system-ui,sans-serif}
 *{box-sizing:border-box}
@@ -37,12 +37,12 @@ h1{margin:0;font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.035
 /* info card */
 .info{position:relative;margin-top:12px;padding:0 2px}
 .info-t{display:flex;flex-direction:column;gap:8px}
-.brand{display:flex;align-items:baseline;gap:9px;white-space:nowrap}
+.brand{display:flex;align-items:baseline;gap:.9em;white-space:nowrap;font-family:'Jura','DM Sans',sans-serif;text-transform:uppercase}
 .top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:2px 2px 0}
 .top em{font-style:normal;font-size:15px;font-weight:300;letter-spacing:-.01em;white-space:nowrap;color:#8F8D88}
 .brand{margin:0}
-.brand b{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1}
-.brand i{font-style:normal;font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1;color:var(--tx)}
+.brand b{font-size:21px;font-weight:600;letter-spacing:.36em;line-height:1;margin-right:-.36em}
+.brand i{font-style:normal;font-size:21px;font-weight:500;letter-spacing:.36em;line-height:1;color:var(--tx);margin-right:-.36em}
 .info-t em{font-style:normal;color:var(--tx);font-size:19px;font-weight:700;letter-spacing:-.02em}
 .info-b{margin-top:10px}
 .badge{display:flex;align-items:center;gap:9px;margin:0;font-size:14.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
@@ -144,7 +144,7 @@ h1{margin:0;font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.035
 @media(max-width:360px){
   .card{padding:24px 14px 18px}
   .br{padding:0 8px}.br b{font-size:13px;letter-spacing:0}.br small{font-size:10.5px;letter-spacing:-.02em}
-  .top em{font-size:13px}.brand{gap:6px}.brand i,.brand b{font-size:19px}
+  .top em{font-size:13px}.brand{gap:.7em}.brand i,.brand b{font-size:15px;letter-spacing:.28em}
   .ln>span{white-space:nowrap;font-size:13.5px}.cnt{gap:8px}.cv{min-width:44px;font-size:22px}
   .mipw{width:168px}.mipw input{font-size:22px;padding:0 46px 0 10px}
   .badge{font-size:13.5px}
@@ -156,7 +156,7 @@ h1{margin:0;font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.035
 @media(min-width:760px){
   .shell{max-width:680px;padding:clamp(28px,6vh,72px) 24px}
   .card{padding:52px 56px 44px;border-radius:36px}
-  .brand b,.brand i{font-size:32px}
+  .brand b,.brand i{font-size:28px}
   .top em{font-size:17px}
   .badge{font-size:16.5px}.badge em{font-size:14px}
   .latenote{font-size:13.5px}
@@ -187,7 +187,7 @@ h1{margin:0;font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.035
 <div class="bg" aria-hidden="true"></div>
 <div class="shell">
 <main class="card" id="card">
-  <header class="top"><div class="brand"><b>L.A.S</b><i>AP CHECK</i></div><em id="wk">—</em></header>
+  <header class="top"><div class="brand" role="img" aria-label="L.A.S AP CHECK"><b aria-hidden="true">L&#923;S</b><i aria-hidden="true">&#923;P CHECK</i></div><em id="wk">—</em></header>
 
   <section class="info">
     <div class="info-b">
